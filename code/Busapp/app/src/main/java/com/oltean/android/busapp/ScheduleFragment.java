@@ -133,12 +133,15 @@ public class ScheduleFragment extends Fragment {
                     }
                     end2 = line_end.getContents();
                     Log.v(LOG_TAG, end1 + " " + end2);
-                    for (int i = 3; i > 0; i--) {
+                    for (int i = 4; i > 0; i--) {
                         x1 = line_start.getColumn();
                         y1 = line_start.getRow() + 1;
                         Cell time1 = schedule.getCell(x1, y1);
-                        while ((time1.getContents()).equals("") == false && time1.getContents() != null) {
-                            Log.v(LOG_TAG, time1.getContents());
+                        while ((time1.getContents()).equals("")) {
+                            y1++;
+                            time1 = schedule.getCell(x1, y1);
+                        }
+                        while ((time1.getContents()).equals("") == false) {
                             if ((time1.getContents()).equals("*") == false)
                                 times.get(0).add(time1.getContents());
                             y1++;
@@ -147,6 +150,10 @@ public class ScheduleFragment extends Fragment {
                         x2 = line_end.getColumn();
                         y2 = line_end.getRow() + 1;
                         Cell time2 = schedule.getCell(x2, y2);
+                        while ((time2.getContents()).equals("")) {
+                            y2++;
+                            time2 = schedule.getCell(x2, y2);
+                        }
                         while (!time2.getContents().equals("")) {
                             if (!time2.getContents().equals("*"))
                                 times.get(1).add(time2.getContents());
@@ -155,23 +162,25 @@ public class ScheduleFragment extends Fragment {
                         }
                         x1++;
                         y1 = line_start.getRow();
-                        line_start = schedule.getCell(x1, y1);
-                        while(!line_start.getContents().equals(end1)) {
-                            x1++;
+                        while (x1 < schedule.getColumns()) {
                             line_start = schedule.getCell(x1, y1);
+                            if (line_start.getContents().equals(end1))
+                                break;
+                            x1++;
                         }
                         x2++;
                         y2 = line_end.getRow();
-                        line_end = schedule.getCell(x2, y2);
-                        while(!line_end.getContents().equals(end2)) {
-                            x2++;
+                        while (x2 < schedule.getColumns()) {
                             line_end = schedule.getCell(x2, y2);
+                            if (line_end.getContents().equals(end2))
+                                break;
+                            x2++;
                         }
                     }
-//                    for(int j = 0; j < (times.get(0)).size(); j++)
-//                        Log.v(LOG_TAG, (times.get(0)).get(j));
-//                    for(int j = 0; j < (times.get(1)).size(); j++)
-//                        Log.v(LOG_TAG, (times.get(1)).get(j));
+//                    for (int j = 0; j < (times.get(0)).size(); j++)
+                        Log.d(LOG_TAG, times.get(0).get(0));
+//                    for (int j = 0; j < (times.get(1)).size(); j++)
+                        Log.d(LOG_TAG, times.get(1).get(0));
                 } catch (BiffException e) {
                     Log.e(LOG_TAG, "Error", e);
                     e.printStackTrace();
